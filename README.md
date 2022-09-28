@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Nearby Restaurants App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A react app using google maps api to find nearby restaurants. You can select any place in the map and it'll show restaurants around that. This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
 

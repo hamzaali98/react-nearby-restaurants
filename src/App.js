@@ -101,10 +101,6 @@ function App() {
       .geocode({ location: { lat, lng } })
       .then((response) => {
         if (response.results[0]) {
-          console.log(
-            "Response Result: ",
-            response.results[0].formatted_address
-          );
           setSearchLocation(response.results[0].formatted_address);
         } else {
           window.alert("No results found");
@@ -133,19 +129,27 @@ function App() {
 
       // Get Places Details
       results.map((place) => {
-        service.getDetails(
-          { placeId: place.place_id, fields },
-          function (placeInfo, status) {
-            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-              placesInfo.push(placeInfo);
-              // Update All Places & Add Markers
-              setPlacesDetails((prev) => {
-                return [...new Set([...prev, ...placesInfo])];
-              });
-              addMarkers(placesInfo);
-            }
+        setTimeout(() => {
+          if (placesInfo.length <= 10) {
+            service.getDetails(
+              { placeId: place.place_id, fields },
+              async function (placeInfo, status) {
+                if (
+                  status === window.google.maps.places.PlacesServiceStatus.OK
+                ) {
+                  debugger;
+                  setTimeout(() => {}, 1000);
+                  placesInfo.push(placeInfo);
+                  // Update All Places & Add Markersx
+                  setPlacesDetails((prev) => {
+                    return [...new Set([...prev, ...placesInfo])];
+                  });
+                  addMarkers(placesInfo);
+                }
+              }
+            );
           }
-        );
+        }, 500);
       });
     }
   };
