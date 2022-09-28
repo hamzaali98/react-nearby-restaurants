@@ -1,0 +1,81 @@
+h1, h2, h3, h4, h5, h6, div, p, span, li, button {
+  font-family: 'Lato', sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+/** Utils **/
+.stars {
+  display: inline-block;
+  list-style: none;
+
+  li {
+    display: inline-block;
+    color: #eee;
+    font-size: 0.9rem;
+  }
+}
+
+.rate-5 {
+  li:nth-child(1), li:nth-child(2), li:nth-child(3), li:nth-child(4), li:nth-child(5) {
+    color: #4611a7;
+  }
+}
+
+.rate-4 {
+  li:nth-child(1), li:nth-child(2), li:nth-child(3), li:nth-child(4) {
+    color: #4611a7;
+  }
+}
+
+.rate-3 {
+  li:nth-child(1), li:nth-child(2), li:nth-child(3) {
+    color: #4611a7;
+  }
+}
+
+.rate-2 {
+  li:nth-child(1), li:nth-child(2) {
+    color: #4611a7;
+  }
+}
+
+.rate-1 {
+  li:nth-child(1) {
+    color: #4611a7;
+  }
+}
+
+
+
+
+
+.App {
+
+  .title {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    font-weight: bold;
+    color: white;
+  }
+  .header {
+    padding: 10px;
+    background-color: #365956;
+    min-height: 100vh;
+    flex-direction: column;
+    display: flex;
+  }
+  #row {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+
+#location{
+  color: white;
+  min-width: 65%;
+}
