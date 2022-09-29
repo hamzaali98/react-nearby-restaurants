@@ -34,7 +34,9 @@ export const Restaurants = ({ placesData }) => {
               alt={place.name}
             />
             <div className="details">
-              <h2 className="name">{place.name}</h2>
+              <h2 className="name">
+                {place.name} ( {Math.round(place.distance * 100) / 100} ) KM
+              </h2>
               <div className="review">
                 <ul className={"stars rate-" + Math.round(place.rating)}>
                   <li>

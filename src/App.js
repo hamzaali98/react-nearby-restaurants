@@ -11,7 +11,7 @@ function App() {
   const [lat, setLat] = useState(0);
   const [lng, setLng] = useState(0);
   const [firstTime, setFirstTime] = useState(true);
-
+  const [initialized, setInitalized] = useState(false);
   const API_KEY = `AIzaSyAdykJxC4DxbPABX4pUcVCWdAkJByirVU0`;
 
   let map;
@@ -47,9 +47,12 @@ function App() {
   };
 
   const renderMap = () => {
-    loadScript(
-      `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places&callback=initMap`
-    );
+    if (!initialized) {
+      loadScript(
+        `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&libraries=places&callback=initMap`
+      );
+      setInitalized(true);
+    }
 
     window.initMap = initMap;
   };
@@ -111,6 +114,37 @@ function App() {
     service.nearbySearch(request, fetchRestaurants);
   };
 
+  const calculateDistance = (
+    lattitude1,
+    longittude1,
+    lattitude2,
+    longittude2
+  ) => {
+    const toRadian = (n) => (n * Math.PI) / 180;
+
+    let lat2 = lattitude2;
+    let lon2 = longittude2;
+    let lat1 = lattitude1;
+    let lon1 = longittude1;
+
+    console.log(lat1, lon1 + "===" + lat2, lon2);
+    let R = 6371; // km
+    let x1 = lat2 - lat1;
+    let dLat = toRadian(x1);
+    let x2 = lon2 - lon1;
+    let dLon = toRadian(x2);
+    let a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(toRadian(lat1)) *
+        Math.cos(toRadian(lat2)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c;
+    console.log("distance==?", d);
+    return d;
+  };
+
   const fetchRestaurants = (results, status) => {
     setPlacesDetails([]);
     if (status === window.google.maps.places.PlacesServiceStatus.OK) {
@@ -129,27 +163,31 @@ function App() {
 
       // Get Places Details
       results.map((place) => {
-        setTimeout(() => {
-          if (placesInfo.length <= 10) {
-            service.getDetails(
-              { placeId: place.place_id, fields },
-              async function (placeInfo, status) {
-                if (
-                  status === window.google.maps.places.PlacesServiceStatus.OK
-                ) {
-                  debugger;
-                  setTimeout(() => {}, 1000);
-                  placesInfo.push(placeInfo);
-                  // Update All Places & Add Markersx
-                  setPlacesDetails((prev) => {
-                    return [...new Set([...prev, ...placesInfo])];
-                  });
-                  addMarkers(placesInfo);
-                }
-              }
-            );
+        service.getDetails(
+          { placeId: place.place_id, fields },
+          function (placeInfo, status) {
+            if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+              console.log(placeInfo);
+              debugger;
+
+              placeInfo.distance = calculateDistance(
+                lat,
+                lng,
+                placeInfo.geometry.location.lat(),
+                placeInfo.geometry.location.lng()
+              );
+              placesInfo.push(placeInfo);
+              debugger;
+              // Update All Places & Add Markers
+              setPlacesDetails((prev) => {
+                return [...new Set([...prev, ...placesInfo])];
+              });
+              addMarkers(placesInfo);
+            } else {
+              console.log(status);
+            }
           }
-        }, 500);
+        );
       });
     }
   };
